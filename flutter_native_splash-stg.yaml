@@ -1,0 +1,8 @@
+flutter_native_splash:
+  color: "#46755E"
+  image: "assets/images/blackjack21_logo_splash.png"
+
+  android_12:
+    image: "assets/images/android12_splash.png"
+    color: "#46755E"
+    icon_background_color: "#46755E"

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1017821902237",
+    "project_id": "blackjack21-stg",
+    "storage_bucket": "blackjack21-stg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017821902237:android:e56693f5f0acc030aeeb74",
+        "android_client_info": {
+          "package_name": "com.dvo.blackjack21.stg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrLI7GjkAj5fYEXDqzAkHdYaYMlML_CIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

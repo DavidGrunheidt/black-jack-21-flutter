@@ -1,0 +1,7 @@
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_stg.dart
+ASSET_PREFIX=stg
+BUNDLE_NAME=[Stg]Blackjack 21
+BUNDLE_DISPLAY_NAME=[Stg]Blackjack 21
+APPLINK_SCHEME=dvoblackjack21stg

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352061648512",
+    "project_id": "blackjack21-prod",
+    "storage_bucket": "blackjack21-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352061648512:android:e34c42778a71060efa8065",
+        "android_client_info": {
+          "package_name": "com.dvo.blackjack21"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDejogd_RmjD9CWo36rjU516ZT1Q0ecRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
