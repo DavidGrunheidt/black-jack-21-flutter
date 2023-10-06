@@ -1,4 +1,4 @@
-import 'core/boot.dart';
+import 'boot.dart';
 import 'core/flavors/flavors.dart';
 
 Future<void> main() async {
