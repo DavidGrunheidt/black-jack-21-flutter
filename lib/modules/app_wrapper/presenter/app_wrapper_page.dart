@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/dependencies/dependency_injector.dart';
 import 'app_wrapper_controller.dart';
 
 @RoutePage()
@@ -17,7 +18,15 @@ class AppWrapperPage extends StatefulWidget {
 }
 
 class _AppWrapperPageState extends State<AppWrapperPage> {
-  late final AppWrapperController controller = widget.controller ?? AppWrapperController();
+  late final controller = widget.controller ?? getIt<AppWrapperController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.trackingPermissionRequestUseCase();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
