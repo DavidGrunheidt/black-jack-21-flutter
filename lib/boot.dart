@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'core/dependencies/dependency_injector.dart';
 import 'core/firebase_options/firebase_options.dart';
 import 'modules/blackjack21_app.dart';
 
@@ -29,6 +30,7 @@ Future<void> boot() async {
       }).sendPort);
     }
 
+    configureDependencies();
     runApp(Blackjack21App());
   }, (error, stack) async {
     if (kDebugMode) debugPrint('Unhandled Error: $error StackTrace: $stack');
