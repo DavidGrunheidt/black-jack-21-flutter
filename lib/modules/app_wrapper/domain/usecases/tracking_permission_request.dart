@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/permission/domain/services/permission_service.dart';
@@ -14,6 +16,8 @@ class TrackingPermissionRequestImpl implements TrackingPermissionRequest {
 
   @override
   Future<bool> call() async {
+    if (Platform.isAndroid) return true;
+
     final result = await service.requestTrackingPermission();
     return result.getOrElse(() => false);
   }

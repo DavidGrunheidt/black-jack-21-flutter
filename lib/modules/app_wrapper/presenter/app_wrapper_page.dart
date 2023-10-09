@@ -24,7 +24,7 @@ class _AppWrapperPageState extends State<AppWrapperPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.trackingPermissionRequestUseCase();
+      Future.delayed(const Duration(seconds: 2), controller.trackingPermissionRequestUseCase);
     });
   }
 
