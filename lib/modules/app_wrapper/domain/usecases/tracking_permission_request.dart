@@ -1,16 +1,20 @@
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../errors/errors.dart';
+import '../../../../core/permission/domain/services/permission_service.dart';
 
 abstract class TrackingPermissionRequest {
-  Future<Either<Failure, bool>> call();
+  Future<bool> call();
 }
 
 @Injectable(as: TrackingPermissionRequest)
 class TrackingPermissionRequestImpl implements TrackingPermissionRequest {
+  final PermissionService service;
+
+  TrackingPermissionRequestImpl(this.service);
+
   @override
-  Future<Either<Failure, bool>> call() async {
-    return const Right(true);
+  Future<bool> call() async {
+    final result = await service.requestTrackingPermission();
+    return result.getOrElse(() => false);
   }
 }
