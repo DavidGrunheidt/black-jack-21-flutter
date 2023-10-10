@@ -21,7 +21,7 @@ void main() {
     test('getNewDeck retrieves newDeck and parses correctly', () async {
       final newDeckJson = fromJsonFile('new_deck_resp.json');
 
-      Future<Response> getNewDeck() => mockApiClient.get('/new');
+      Future<Response> getNewDeck() => mockApiClient.get('/api/deck/new');
       when(getNewDeck()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: newDeckJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('getNewDeck throws exception', () async {
-      Future<Response> getNewDeck() => mockApiClient.get('/new');
+      Future<Response> getNewDeck() => mockApiClient.get('/api/deck/new');
       when(getNewDeck()).thenThrow(DioException(requestOptions: RequestOptions()));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);

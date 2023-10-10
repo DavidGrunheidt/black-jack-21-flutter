@@ -5,7 +5,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../../utils/app_constants.dart';
 import '../../infra/api_client.dart';
-import 'interceptors/dio_retry_only_get_evaluator.dart';
+import 'dio_retry_only_get_evaluator.dart';
 
 abstract class ApiClientImpl extends ApiClient<Response> {
   Dio get dio;

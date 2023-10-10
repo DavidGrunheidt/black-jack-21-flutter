@@ -15,7 +15,7 @@ class DeckOfCardsApiClientImpl extends ApiClientImpl {
     switch (appFlavor) {
       case Flavor.STG:
       case Flavor.PROD:
-        return 'https://deckofcardsapi.com/api/deck';
+        return 'https://deckofcardsapi.com';
     }
   }
 
