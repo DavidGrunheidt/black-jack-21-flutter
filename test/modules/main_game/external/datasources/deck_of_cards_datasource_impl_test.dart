@@ -1,8 +1,8 @@
 import 'package:black_jack_21_flutter/core/api_client/external/datasources/deck_of_cards_api_client_impl.dart';
 import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
 import 'package:black_jack_21_flutter/modules/main_game/external/datasources/deck_of_cards_datasource_impl.dart';
+import 'package:black_jack_21_flutter/modules/main_game/infra/models/card_model.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/deck_model.dart';
-import 'package:black_jack_21_flutter/modules/main_game/infra/models/drawn_card_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -80,7 +80,7 @@ void main() {
 
       final drawCardsJson = fromJsonFile('draw_card_resp.json');
       final drawCardsJsonList = drawCardsJson['cards'] as List;
-      final drawnCards = drawCardsJsonList.map((e) => DrawnCardModel.fromJson(e as Map<String, dynamic>)).toList();
+      final drawnCards = drawCardsJsonList.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
 
       Future<Response> drawCards() => mockApiClient.get('$deckPath/$deckId/draw?count=$count');
       when(drawCards()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: drawCardsJson));
@@ -104,6 +104,132 @@ void main() {
       await expectLater(datasource.drawCards(deckId: deckId, count: count), throwsA(isA<TypeError>()));
 
       verify(drawCards());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('addToPile returns true', () async {
+      const deckId = 'dasdffdf2';
+      const pileName = 'pile1';
+      const cardCodes = ['0D', '4D'];
+      final addToPileJson = fromJsonFile('add_to_pile_resp.json');
+
+      Future<Response> addToPile() =>
+          mockApiClient.get('$deckPath/$deckId/pile/$pileName/add?cards=${cardCodes.join(',')}');
+      when(addToPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: addToPileJson));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      final resp = await datasource.addToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes);
+
+      expect(resp, true);
+      verify(addToPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('addToPile returns false', () async {
+      const deckId = 'd1cdcDsd';
+      const pileName = 'pile2';
+      const cardCodes = ['1D', '2D'];
+
+      final addToPileJson = fromJsonFile('add_to_pile_resp.json');
+      addToPileJson['success'] = false;
+
+      Future<Response> addToPile() =>
+          mockApiClient.get('$deckPath/$deckId/pile/$pileName/add?cards=${cardCodes.join(',')}');
+      when(addToPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: addToPileJson));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      final resp = await datasource.addToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes);
+
+      expect(resp, false);
+      verify(addToPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('addToPile throws Exception', () async {
+      const deckId = 'c0d31123';
+      const pileName = 'pile3';
+      const cardCodes = ['3D', '6D'];
+
+      Future<Response> addToPile() =>
+          mockApiClient.get('$deckPath/$deckId/pile/$pileName/add?cards=${cardCodes.join(',')}');
+      when(addToPile()).thenThrow(Exception());
+
+      await expectLater(
+        DeckOfCardsDatasourceImpl(mockApiClient).addToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes),
+        throwsException,
+      );
+
+      verify(addToPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('listPile returns empty list', () async {
+      const deckId = 'dasd1413f';
+      const pileName = 'table';
+
+      final respJson = fromJsonFile('list_pile_empty_cards_resp.json');
+
+      Future<Response> listPile() => mockApiClient.get('$deckPath/$deckId/pile/$pileName/list');
+      when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      final resp = await datasource.listPile(deckId: deckId, pileName: pileName);
+
+      expect(resp.isEmpty, true);
+      verify(listPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('listPile returns two cards', () async {
+      const deckId = 'dasd1413f';
+      const pileName = 'table';
+
+      final respJson = fromJsonFile('list_pile_resp.json');
+      final pileCardsJson = respJson['piles']['table']['cards'] as List;
+      final pileCards = pileCardsJson.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
+
+      Future<Response> listPile() => mockApiClient.get('$deckPath/$deckId/pile/$pileName/list');
+      when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      final resp = await datasource.listPile(deckId: deckId, pileName: pileName);
+
+      expect(resp, pileCards);
+      verify(listPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('listPile throws NoSuchMethodError when pile does not exists', () async {
+      const deckId = 'dasd1413f';
+      const pileName = 'table3124';
+
+      final respJson = fromJsonFile('list_pile_resp.json');
+
+      Future<Response> listPile() => mockApiClient.get('$deckPath/$deckId/pile/$pileName/list');
+      when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
+
+      await expectLater(
+        DeckOfCardsDatasourceImpl(mockApiClient).listPile(deckId: deckId, pileName: pileName),
+        throwsA(isA<NoSuchMethodError>()),
+      );
+
+      verify(listPile());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('listPile throws DioException', () async {
+      const deckId = 'dasd1413f';
+      const pileName = 'table3124';
+
+      Future<Response> listPile() => mockApiClient.get('$deckPath/$deckId/pile/$pileName/list');
+      when(listPile()).thenThrow(DioException(requestOptions: RequestOptions()));
+
+      await expectLater(
+        DeckOfCardsDatasourceImpl(mockApiClient).listPile(deckId: deckId, pileName: pileName),
+        throwsA(isA<DioException>()),
+      );
+
+      verify(listPile());
       verifyNoMoreInteractions(mockApiClient);
     });
   });

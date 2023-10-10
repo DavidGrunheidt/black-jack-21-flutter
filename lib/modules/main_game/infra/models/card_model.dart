@@ -2,14 +2,14 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'drawn_card_images_model.dart';
+import 'card_images_model.dart';
 
-part 'drawn_card_model.g.dart';
+part 'card_model.g.dart';
 
 @CopyWith()
 @JsonSerializable()
-class DrawnCardModel extends Equatable {
-  const DrawnCardModel({
+class CardModel extends Equatable {
+  const CardModel({
     required this.code,
     required this.image,
     required this.images,
@@ -22,11 +22,11 @@ class DrawnCardModel extends Equatable {
   final String value;
   final String suit;
 
-  final DrawnCardImagesModel images;
+  final CardImagesModel images;
 
-  factory DrawnCardModel.fromJson(Map<String, dynamic> json) => _$DrawnCardModelFromJson(json);
+  factory CardModel.fromJson(Map<String, dynamic> json) => _$CardModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DrawnCardModelToJson(this);
+  Map<String, dynamic> toJson() => _$CardModelToJson(this);
 
   @override
   List<Object?> get props => [code, image, images, value, suit];

@@ -1,43 +1,83 @@
 import 'package:black_jack_21_flutter/core/api_client/external/datasources/deck_of_cards_api_client_impl.dart';
 import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
 import 'package:black_jack_21_flutter/modules/main_game/external/datasources/deck_of_cards_datasource_impl.dart';
+import 'package:black_jack_21_flutter/modules/main_game/infra/models/card_model.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/deck_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../utils/dart_define_utils.dart';
 
 void main() {
-  return group('DeckOfCardsDatasourceImplE2E', skip: skipIntegrationTests, () {
+  return group('DeckOfCardsDatasourceImplE2E', skip: skipE2ETests, () {
     appFlavor = Flavor.PROD;
 
     final apiClient = DeckOfCardsApiClientImpl();
-    late final DeckModel deckModel;
+    final datasource = DeckOfCardsDatasourceImpl(apiClient);
 
-    test('getNewDeck retrieves newDeck and parses correctly', () async {
-      final datasource = DeckOfCardsDatasourceImpl(apiClient);
-      final resp = await datasource.getNewDeck();
+    const pileName = 'pile1';
+    late DeckModel deckModel;
+    late final List<CardModel> drawnCards;
 
-      deckModel = resp;
+    test('1 - getNewDeck retrieves newDeck and parses correctly', () async {
+      deckModel = await datasource.getNewDeck();
 
-      expect(resp.success, true);
-      expect(resp.remaining, 52);
-      expect(resp.shuffled, false);
+      expect(deckModel.success, true);
+      expect(deckModel.remaining, 52);
+      expect(deckModel.shuffled, false);
     });
 
-    test('reshuffleDeck returns a shuffled deck', () async {
-      final datasource = DeckOfCardsDatasourceImpl(apiClient);
-      final resp = await datasource.reshuffleDeck(deckId: deckModel.deckId);
+    test('2 - reshuffleDeck returns a shuffled deck', () async {
+      deckModel = await datasource.reshuffleDeck(deckId: deckModel.deckId);
 
-      expect(resp.success, true);
-      expect(resp.remaining, 52);
-      expect(resp.shuffled, true);
+      expect(deckModel.success, true);
+      expect(deckModel.remaining, 52);
+      expect(deckModel.shuffled, true);
     });
 
-    test('drawCards returns two drawn cards', () async {
-      final datasource = DeckOfCardsDatasourceImpl(apiClient);
-      final resp = await datasource.drawCards(deckId: deckModel.deckId, count: 2);
+    test('3 - drawCards returns two drawn cards', () async {
+      drawnCards = await datasource.drawCards(deckId: deckModel.deckId, count: 2);
 
-      expect(resp.length, 2);
+      expect(drawnCards.length, 2);
+    });
+
+    test('4 - addToPile adds two drawn cards to pile', () async {
+      final success = await datasource.addToPile(
+        deckId: deckModel.deckId,
+        pileName: pileName,
+        cardCodes: drawnCards.map((e) => e.code).toList(),
+      );
+
+      expect(success, true);
+    });
+
+    test('5 - addToPile adds two drawn cards to pile', () async {
+      final success = await datasource.addToPile(
+        deckId: deckModel.deckId,
+        pileName: pileName,
+        cardCodes: drawnCards.map((e) => e.code).toList(),
+      );
+
+      expect(success, true);
+    });
+
+    test('6 - listPile lists the two previously added cards inside the pile', () async {
+      final pileCards = await datasource.listPile(deckId: deckModel.deckId, pileName: pileName);
+      expect(pileCards, drawnCards);
+    });
+
+    test('7 - reshuffleDeck returns all cards to deck', () async {
+      deckModel = await datasource.reshuffleDeck(deckId: deckModel.deckId);
+
+      expect(deckModel.success, true);
+      expect(deckModel.remaining, 52);
+      expect(deckModel.shuffled, true);
+    });
+
+    test('8 - listPile throws NoSuchMethodError since no pile was created after shuffling', () {
+      return expectLater(
+        datasource.listPile(deckId: deckModel.deckId, pileName: pileName),
+        throwsA(isA<NoSuchMethodError>()),
+      );
     });
   });
 }

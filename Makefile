@@ -15,7 +15,7 @@ ci-tests:
 all-tests:
 	dart format --set-exit-if-changed . -l 120
 	dart analyze
-	flutter test -r expanded --coverage --dart-define=skipItTests=false
+	flutter test -r expanded --coverage --dart-define=skipE2ETests=false
 	dart run covadge ./coverage/lcov.info ./
 
 filter-lcov:
