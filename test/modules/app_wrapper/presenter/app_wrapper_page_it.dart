@@ -26,7 +26,7 @@ import 'app_wrapper_page_it.mocks.dart';
   ],
 )
 void main() {
-  return group('TrackingPermissionRequest', () {
+  return group('AppWrapperPage', () {
     final mockPermissionHandlerPlatform = MockPermissionHandlerPlatform();
     final mockStackRouter = MockStackRouter();
 
