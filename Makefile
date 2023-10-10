@@ -13,6 +13,7 @@ ci-tests:
 
 filter-lcov:
 	/bin/zsh ./filter_lcov.sh
+	dart run covadge ./coverage/lcov.info ./
 
 show-test-coverage:
 	genhtml coverage/lcov.info -o coverage/html
