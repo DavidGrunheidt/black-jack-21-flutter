@@ -42,5 +42,31 @@ void main() {
       verify(getNewDeck());
       verifyNoMoreInteractions(mockApiClient);
     });
+
+    test('reshuffleDeck returns a shuffled deck', () async {
+      final shuffledDeckJson = fromJsonFile('reshuffle_deck_resp.json');
+      final shuffledDeck = DeckModel.fromJson(shuffledDeckJson);
+
+      Future<Response> reshuffle() => mockApiClient.get('/api/deck/${shuffledDeck.deckId}/shuffle');
+      when(reshuffle()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: shuffledDeckJson));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      final resp = await datasource.reshuffleDeck(deckId: shuffledDeck.deckId);
+
+      expect(resp, shuffledDeck);
+      verify(reshuffle());
+      verifyNoMoreInteractions(mockApiClient);
+    });
+
+    test('reshuffleDeck throws exception', () async {
+      Future<Response> reshuffle() => mockApiClient.get('/api/deck/123/shuffle');
+      when(reshuffle()).thenThrow(DioException(requestOptions: RequestOptions()));
+
+      final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
+      await expectLater(datasource.reshuffleDeck(deckId: '123'), throwsA(isA<DioException>()));
+
+      verify(reshuffle());
+      verifyNoMoreInteractions(mockApiClient);
+    });
   });
 }

@@ -19,4 +19,10 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
     final resp = await apiClient.get('/api/deck/new');
     return DeckModel.fromJson(resp.data);
   }
+
+  @override
+  Future<DeckModel> reshuffleDeck({required String deckId}) async {
+    final resp = await apiClient.get('/api/deck/$deckId/shuffle');
+    return DeckModel.fromJson(resp.data);
+  }
 }
