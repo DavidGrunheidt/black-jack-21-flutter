@@ -11,6 +11,9 @@ ci-tests:
 	flutter test -r expanded --coverage
 	dart run covadge ./coverage/lcov.info ./
 
+filter-lcov:
+	/bin/zsh ./filter_lcov.sh
+
 show-test-coverage:
 	genhtml coverage/lcov.info -o coverage/html
 	open coverage/html/index.html
