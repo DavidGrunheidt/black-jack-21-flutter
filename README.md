@@ -1,3 +1,5 @@
+![Coverage](./coverage_badge.svg)
+
 # Blackjack 21 simplified
 
 ## Overview

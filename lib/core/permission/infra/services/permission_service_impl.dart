@@ -17,8 +17,6 @@ class PermissionServiceImpl implements PermissionService {
     try {
       final status = await driver.requestTrackingPermission();
       return Right(status);
-    } on Failure catch (e) {
-      return Left(e);
     } catch (e) {
       return Left(PermissionRequestError());
     }

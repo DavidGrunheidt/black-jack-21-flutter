@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:injectable/injectable.dart';
+import 'package:platform/platform.dart';
 
 import '../../../../core/permission/domain/services/permission_service.dart';
 
@@ -11,12 +10,16 @@ abstract class TrackingPermissionRequest {
 @Injectable(as: TrackingPermissionRequest)
 class TrackingPermissionRequestImpl implements TrackingPermissionRequest {
   final PermissionService service;
+  final Platform _platform;
 
-  TrackingPermissionRequestImpl(this.service);
+  @factoryMethod
+  TrackingPermissionRequestImpl(this.service) : _platform = const LocalPlatform();
+
+  TrackingPermissionRequestImpl.withPlatform(this.service, this._platform);
 
   @override
   Future<bool> call() async {
-    if (Platform.isAndroid) return true;
+    if (!_platform.isIOS) return true;
 
     final result = await service.requestTrackingPermission();
     return result.getOrElse(() => false);

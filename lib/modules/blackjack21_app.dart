@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,9 @@ class Blackjack21App extends StatelessWidget {
         );
       },
       title: appTitle,
-      routerConfig: _router.config(),
+      routerDelegate: AutoRouterDelegate(_router),
+      routeInformationProvider: _router.routeInfoProvider(),
+      routeInformationParser: _router.defaultRouteParser(),
       debugShowCheckedModeBanner: kDebugMode,
     );
   }
