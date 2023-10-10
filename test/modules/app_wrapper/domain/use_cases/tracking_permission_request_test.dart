@@ -27,8 +27,10 @@ void main() {
 
     test('call returns true when !Platform.isIOS', () async {
       when(requestTrackingPermission()).thenAnswer((_) async => const Right(true));
-      final result =
-          await TrackingPermissionRequestImpl.withPlatform(mockPermissionService, fakeAndroidPlatform).call();
+      final result = await TrackingPermissionRequestImpl.withPlatform(
+        mockPermissionService,
+        fakeAndroidPlatform,
+      ).call();
 
       expect(result, true);
       verifyZeroInteractions(mockPermissionService);

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../modules/app_wrapper/presenter/app_wrapper_controller.dart';
 import '../../modules/app_wrapper/presenter/app_wrapper_page.dart';
-import '../../modules/home/presenter/home_page.dart';
+import '../../modules/main_game/main_game_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -15,7 +15,7 @@ class AppRouter extends _$AppRouter {
           path: '/',
           page: AppWrapperRoute.page,
           children: [
-            AutoRoute(path: 'home', page: MyHomeRoute.page, initial: true),
+            AutoRoute(path: 'main-game', page: MainGameRoute.page, initial: true),
           ],
         ),
       ];
