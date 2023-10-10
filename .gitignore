@@ -121,6 +121,7 @@ app.*.symbols
 # Generated Dart files
 **/*.g.dart
 **/*.gr.dart
+**/*.config.dart
 
 # Generated test mock files
 test/**/*.mocks.dart

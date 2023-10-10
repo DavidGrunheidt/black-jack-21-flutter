@@ -11,7 +11,7 @@ class AppWrapperController = _AppWrapperController with _$AppWrapperController;
 abstract class _AppWrapperController with Store {
   final TrackingPermissionRequest trackingPermissionRequestUseCase;
 
-  _AppWrapperController(
+  const _AppWrapperController(
     this.trackingPermissionRequestUseCase,
   );
 }
