@@ -11,6 +11,13 @@ ci-tests:
 	flutter test -r expanded --coverage
 	dart run covadge ./coverage/lcov.info ./
 
+# CI and integration tests
+all-tests:
+	dart format --set-exit-if-changed . -l 120
+	dart analyze
+	flutter test -r expanded --coverage --dart-define=skipItTests=false
+	dart run covadge ./coverage/lcov.info ./
+
 filter-lcov:
 	/bin/zsh ./filter_lcov.sh
 	dart run covadge ./coverage/lcov.info ./
