@@ -4,8 +4,8 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/api_client/infra/api_client.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../infra/datasources/deck_of_cards_datasource.dart';
+import '../../infra/models/card_model.dart';
 import '../../infra/models/deck_model.dart';
-import '../../infra/models/drawn_card_model.dart';
 
 @Injectable(as: DeckOfCardsDatasource)
 class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
@@ -30,10 +30,28 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
   }
 
   @override
-  Future<List<DrawnCardModel>> drawCards({required String deckId, required int count}) async {
+  Future<List<CardModel>> drawCards({required String deckId, required int count}) async {
     final resp = await apiClient.get('$deckPath/$deckId/draw?count=$count');
     final jsonList = resp.data['cards'] as List;
 
-    return jsonList.map((e) => DrawnCardModel.fromJson(e as Map<String, dynamic>)).toList();
+    return jsonList.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  @override
+  Future<bool> addToPile({
+    required String deckId,
+    required String pileName,
+    required List<String> cardCodes,
+  }) async {
+    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileName/add?cards=${cardCodes.join(',')}');
+    return resp.data['success'];
+  }
+
+  @override
+  Future<List<CardModel>> listPile({required String deckId, required String pileName}) async {
+    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileName/list');
+    final jsonList = resp.data['piles'][pileName]['cards'] as List;
+
+    return jsonList.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

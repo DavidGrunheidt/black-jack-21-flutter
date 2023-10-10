@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "deck_id": "wj8n9j0d70hf",
+  "remaining": 50,
+  "piles": {
+    "table": {
+      "remaining": 2,
+      "cards": [
+        {
+          "code": "0D",
+          "image": "https://deckofcardsapi.com/static/img/0D.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/0D.svg",
+            "png": "https://deckofcardsapi.com/static/img/0D.png"
+          },
+          "value": "10",
+          "suit": "DIAMONDS"
+        },
+        {
+          "code": "4D",
+          "image": "https://deckofcardsapi.com/static/img/4D.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/4D.svg",
+            "png": "https://deckofcardsapi.com/static/img/4D.png"
+          },
+          "value": "4",
+          "suit": "DIAMONDS"
+        }
+      ]
+    }
+  }
+}
