@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 
-import '../flavors/flavors.dart';
+import '../../flavors.dart';
 import 'firebase_options_prod.dart' as firebase_options_prod;
 import 'firebase_options_stg.dart' as firebase_options_stg;
 

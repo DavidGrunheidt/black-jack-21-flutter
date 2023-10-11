@@ -11,8 +11,8 @@ class GetNewDeckError extends Failure {
   String get code => 'GET_NEW_DECK_ERROR';
 }
 
-class ReshuffleDeckError extends Failure {
-  ReshuffleDeckError({
+class ShuffleDeckError extends Failure {
+  ShuffleDeckError({
     super.message = 'Não foi possível embaralhar este baralho',
     super.error,
     super.stack,

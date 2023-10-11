@@ -3,7 +3,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../../flavors/flavors.dart';
+import '../../../../flavors.dart';
 import '../../../utils/app_constants.dart';
 import '../../infra/api_client.dart';
 import 'dio_retry_only_get_evaluator.dart';
