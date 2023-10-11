@@ -1,6 +1,7 @@
 import 'package:black_jack_21_flutter/core/permission/domain/errors/permission_errors.dart';
 import 'package:black_jack_21_flutter/core/permission/infra/drivers/permission_driver.dart';
 import 'package:black_jack_21_flutter/core/permission/infra/services/permission_service_impl.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -23,7 +24,7 @@ void main() {
       when(requestTrackingPermission()).thenAnswer((_) async => true);
       final result = await PermissionServiceImpl(mockPermissionDriver).requestTrackingPermission();
 
-      expect(result.isRight(), true);
+      expect(result, const Right(true));
       expect(result.getOrElse(() => false), true);
       verify(requestTrackingPermission());
       verifyNoMoreInteractions(mockPermissionDriver);
@@ -33,8 +34,7 @@ void main() {
       when(requestTrackingPermission()).thenAnswer((_) async => false);
       final result = await PermissionServiceImpl(mockPermissionDriver).requestTrackingPermission();
 
-      expect(result.isRight(), true);
-      expect(result.getOrElse(() => true), false);
+      expect(result, const Right(false));
       verify(requestTrackingPermission());
       verifyNoMoreInteractions(mockPermissionDriver);
     });
