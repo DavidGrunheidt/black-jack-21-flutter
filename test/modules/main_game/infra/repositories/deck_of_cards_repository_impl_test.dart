@@ -50,32 +50,32 @@ void main() {
       verifyNoMoreInteractions(mockDatasource);
     });
 
-    test('reshuffleDeck returns Right(DeckModel)', () async {
-      final shuffledDeck = DeckModel.fromJson(fromJsonFile('reshuffle_deck_resp.json'));
+    test('shuffleDeck returns Right(DeckModel)', () async {
+      final shuffledDeck = DeckModel.fromJson(fromJsonFile('shuffle_deck_resp.json'));
 
-      Future<DeckModel> reshuffle() => mockDatasource.reshuffleDeck(deckId: shuffledDeck.deckId);
-      when(reshuffle()).thenAnswer((_) async => shuffledDeck);
+      Future<DeckModel> shuffle() => mockDatasource.shuffleDeck(deckId: shuffledDeck.deckId);
+      when(shuffle()).thenAnswer((_) async => shuffledDeck);
 
-      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).reshuffleDeck(deckId: shuffledDeck.deckId);
+      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).shuffleDeck(deckId: shuffledDeck.deckId);
 
       expect(resp, Right(shuffledDeck));
-      verify(reshuffle());
+      verify(shuffle());
       verifyNoMoreInteractions(mockDatasource);
     });
 
-    test('reshuffleDeck returns Left(Failure)', () async {
+    test('shuffleDeck returns Left(Failure)', () async {
       const deckId = 'dce141ff';
 
-      Future<DeckModel> reshuffle() => mockDatasource.reshuffleDeck(deckId: deckId);
-      when(reshuffle()).thenThrow(TypeError());
+      Future<DeckModel> shuffle() => mockDatasource.shuffleDeck(deckId: deckId);
+      when(shuffle()).thenThrow(TypeError());
 
-      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).reshuffleDeck(deckId: deckId);
+      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).shuffleDeck(deckId: deckId);
       resp.fold(
-        (left) => expect(left, isA<ReshuffleDeckError>()),
+        (left) => expect(left, isA<ShuffleDeckError>()),
         (right) => expect(right, null),
       );
 
-      verify(reshuffle());
+      verify(shuffle());
       verifyNoMoreInteractions(mockDatasource);
     });
 
@@ -118,14 +118,14 @@ void main() {
       const cardCode = '1D';
 
       Future<bool> addToPile() {
-        return mockDatasource.addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: [cardCode]);
+        return mockDatasource.addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: [cardCode]);
       }
 
       when(addToPile()).thenAnswer((_) async => true);
 
       final resp = await DeckOfCardsRepositoryImpl(mockDatasource).addCardToPile(
         deckId: deckId,
-        pileName: pileName,
+        pileId: pileName,
         cardCode: cardCode,
       );
 
@@ -140,14 +140,14 @@ void main() {
       const cardCode = '5D';
 
       Future<bool> addToPile() {
-        return mockDatasource.addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: [cardCode]);
+        return mockDatasource.addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: [cardCode]);
       }
 
       when(addToPile()).thenAnswer((_) async => false);
 
       final resp = await DeckOfCardsRepositoryImpl(mockDatasource).addCardToPile(
         deckId: deckId,
-        pileName: pileName,
+        pileId: pileName,
         cardCode: cardCode,
       );
 
@@ -162,14 +162,14 @@ void main() {
       const cardCode = '0D';
 
       Future<bool> addToPile() {
-        return mockDatasource.addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: [cardCode]);
+        return mockDatasource.addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: [cardCode]);
       }
 
       when(addToPile()).thenThrow(Exception());
 
       final resp = await DeckOfCardsRepositoryImpl(mockDatasource).addCardToPile(
         deckId: deckId,
-        pileName: pileName,
+        pileId: pileName,
         cardCode: cardCode,
       );
 
@@ -186,10 +186,10 @@ void main() {
       const deckId = 'dasd1413f';
       const pileName = 'table';
 
-      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileId: pileName);
       when(listPile()).thenAnswer((_) async => []);
 
-      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileName: pileName);
+      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileId: pileName);
       resp.fold(
         (left) => expect(left, null),
         (right) => expect(right.isEmpty, true),
@@ -207,10 +207,10 @@ void main() {
       final pileCardsJson = respJson['piles']['table']['cards'] as List;
       final pileCards = pileCardsJson.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
 
-      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileId: pileName);
       when(listPile()).thenAnswer((_) async => pileCards);
 
-      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileName: pileName);
+      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileId: pileName);
 
       expect(resp, Right(pileCards));
       verify(listPile());
@@ -221,10 +221,10 @@ void main() {
       const deckId = 'dasd1413f';
       const pileName = 'table3124';
 
-      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      Future<List<CardModel>> listPile() => mockDatasource.listCardsInPile(deckId: deckId, pileId: pileName);
       when(listPile()).thenThrow(UnsupportedError(''));
 
-      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileName: pileName);
+      final resp = await DeckOfCardsRepositoryImpl(mockDatasource).listCardsInPile(deckId: deckId, pileId: pileName);
       resp.fold(
         (left) => expect(left, isA<ListCardsInPileError>()),
         (right) => expect(right, null),

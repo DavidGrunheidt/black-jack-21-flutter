@@ -1,5 +1,5 @@
 import 'package:black_jack_21_flutter/core/api_client/external/datasources/deck_of_cards_api_client_impl.dart';
-import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
+import 'package:black_jack_21_flutter/flavors.dart';
 import 'package:black_jack_21_flutter/modules/main_game/external/datasources/deck_of_cards_datasource_impl.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/card_model.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/deck_model.dart';
@@ -50,31 +50,31 @@ void main() {
       verifyNoMoreInteractions(mockApiClient);
     });
 
-    test('reshuffleDeck returns a shuffled deck', () async {
-      final shuffledDeckJson = fromJsonFile('reshuffle_deck_resp.json');
+    test('shuffleDeck returns a shuffled deck', () async {
+      final shuffledDeckJson = fromJsonFile('shuffle_deck_resp.json');
       final shuffledDeck = DeckModel.fromJson(shuffledDeckJson);
 
-      Future<Response> reshuffle() => mockApiClient.get('$deckPath/${shuffledDeck.deckId}/shuffle');
-      when(reshuffle()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: shuffledDeckJson));
+      Future<Response> shuffle() => mockApiClient.get('$deckPath/${shuffledDeck.deckId}/shuffle');
+      when(shuffle()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: shuffledDeckJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      final resp = await datasource.reshuffleDeck(deckId: shuffledDeck.deckId);
+      final resp = await datasource.shuffleDeck(deckId: shuffledDeck.deckId);
 
       expect(resp, shuffledDeck);
-      verify(reshuffle());
+      verify(shuffle());
       verifyNoMoreInteractions(mockApiClient);
     });
 
-    test('reshuffleDeck throws DioException', () async {
+    test('shuffleDeck throws DioException', () async {
       const deckId = 'das2dx';
 
-      Future<Response> reshuffle() => mockApiClient.get('$deckPath/$deckId/shuffle');
-      when(reshuffle()).thenThrow(DioException(requestOptions: RequestOptions()));
+      Future<Response> shuffle() => mockApiClient.get('$deckPath/$deckId/shuffle');
+      when(shuffle()).thenThrow(DioException(requestOptions: RequestOptions()));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      await expectLater(datasource.reshuffleDeck(deckId: deckId), throwsA(isA<DioException>()));
+      await expectLater(datasource.shuffleDeck(deckId: deckId), throwsA(isA<DioException>()));
 
-      verify(reshuffle());
+      verify(shuffle());
       verifyNoMoreInteractions(mockApiClient);
     });
 
@@ -122,7 +122,7 @@ void main() {
       when(addToPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: addToPileJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      final resp = await datasource.addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes);
+      final resp = await datasource.addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: cardCodes);
 
       expect(resp, true);
       verify(addToPile());
@@ -142,7 +142,7 @@ void main() {
       when(addToPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: addToPileJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      final resp = await datasource.addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes);
+      final resp = await datasource.addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: cardCodes);
 
       expect(resp, false);
       verify(addToPile());
@@ -159,8 +159,7 @@ void main() {
       when(addToPile()).thenThrow(Exception());
 
       await expectLater(
-        DeckOfCardsDatasourceImpl(mockApiClient)
-            .addCardsToPile(deckId: deckId, pileName: pileName, cardCodes: cardCodes),
+        DeckOfCardsDatasourceImpl(mockApiClient).addCardsToPile(deckId: deckId, pileId: pileName, cardCodes: cardCodes),
         throwsException,
       );
 
@@ -178,7 +177,7 @@ void main() {
       when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      final resp = await datasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      final resp = await datasource.listCardsInPile(deckId: deckId, pileId: pileName);
 
       expect(resp.isEmpty, true);
       verify(listPile());
@@ -197,7 +196,7 @@ void main() {
       when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
 
       final datasource = DeckOfCardsDatasourceImpl(mockApiClient);
-      final resp = await datasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      final resp = await datasource.listCardsInPile(deckId: deckId, pileId: pileName);
 
       expect(resp, pileCards);
       verify(listPile());
@@ -214,7 +213,7 @@ void main() {
       when(listPile()).thenAnswer((_) async => Response(requestOptions: RequestOptions(), data: respJson));
 
       await expectLater(
-        DeckOfCardsDatasourceImpl(mockApiClient).listCardsInPile(deckId: deckId, pileName: pileName),
+        DeckOfCardsDatasourceImpl(mockApiClient).listCardsInPile(deckId: deckId, pileId: pileName),
         throwsA(isA<NoSuchMethodError>()),
       );
 
@@ -230,7 +229,7 @@ void main() {
       when(listPile()).thenThrow(DioException(requestOptions: RequestOptions()));
 
       await expectLater(
-        DeckOfCardsDatasourceImpl(mockApiClient).listCardsInPile(deckId: deckId, pileName: pileName),
+        DeckOfCardsDatasourceImpl(mockApiClient).listCardsInPile(deckId: deckId, pileId: pileName),
         throwsA(isA<DioException>()),
       );
 

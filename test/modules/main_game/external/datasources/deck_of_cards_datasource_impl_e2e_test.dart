@@ -1,5 +1,5 @@
 import 'package:black_jack_21_flutter/core/api_client/external/datasources/deck_of_cards_api_client_impl.dart';
-import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
+import 'package:black_jack_21_flutter/flavors.dart';
 import 'package:black_jack_21_flutter/modules/main_game/external/datasources/deck_of_cards_datasource_impl.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/card_model.dart';
 import 'package:black_jack_21_flutter/modules/main_game/infra/models/deck_model.dart';
@@ -26,8 +26,8 @@ void main() {
       expect(deckModel.shuffled, false);
     });
 
-    test('2 - reshuffleDeck returns a shuffled deck', () async {
-      deckModel = await datasource.reshuffleDeck(deckId: deckModel.deckId);
+    test('2 - shuffleDeck returns a shuffled deck', () async {
+      deckModel = await datasource.shuffleDeck(deckId: deckModel.deckId);
 
       expect(deckModel.success, true);
       expect(deckModel.remaining, 52);
@@ -43,7 +43,7 @@ void main() {
     test('4 - addCardsToPile adds two drawn cards to pile', () async {
       final success = await datasource.addCardsToPile(
         deckId: deckModel.deckId,
-        pileName: pileName,
+        pileId: pileName,
         cardCodes: drawnCards.map((e) => e.code).toList(),
       );
 
@@ -51,12 +51,12 @@ void main() {
     });
 
     test('5 - listCardsInPile lists the two previously added cards inside the pile', () async {
-      final pileCards = await datasource.listCardsInPile(deckId: deckModel.deckId, pileName: pileName);
+      final pileCards = await datasource.listCardsInPile(deckId: deckModel.deckId, pileId: pileName);
       expect(pileCards, drawnCards);
     });
 
-    test('6 - reshuffleDeck returns all cards to deck', () async {
-      deckModel = await datasource.reshuffleDeck(deckId: deckModel.deckId);
+    test('6 - shuffleDeck returns all cards to deck', () async {
+      deckModel = await datasource.shuffleDeck(deckId: deckModel.deckId);
 
       expect(deckModel.success, true);
       expect(deckModel.remaining, 52);
@@ -65,7 +65,7 @@ void main() {
 
     test('7 - listCardsInPile throws NoSuchMethodError since no pile was created after shuffling', () {
       return expectLater(
-        datasource.listCardsInPile(deckId: deckModel.deckId, pileName: pileName),
+        datasource.listCardsInPile(deckId: deckModel.deckId, pileId: pileName),
         throwsA(isA<NoSuchMethodError>()),
       );
     });

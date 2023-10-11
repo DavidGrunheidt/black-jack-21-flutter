@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:black_jack_21_flutter/core/dependencies/dependency_injector.dart';
-import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
 import 'package:black_jack_21_flutter/core/permission/external/drivers/permission_driver_impl.dart';
 import 'package:black_jack_21_flutter/core/permission/infra/services/permission_service_impl.dart';
 import 'package:black_jack_21_flutter/core/router/app_router.dart';
+import 'package:black_jack_21_flutter/flavors.dart';
 import 'package:black_jack_21_flutter/modules/app_wrapper/domain/usecases/tracking_permission_request.dart';
 import 'package:black_jack_21_flutter/modules/app_wrapper/presenter/app_wrapper_controller.dart';
 import 'package:flutter_test/flutter_test.dart';

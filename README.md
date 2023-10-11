@@ -2,11 +2,7 @@
 
 # Blackjack 21 simplified
 
-## Overview
-
 ### Architecture
-
-## Tests
 
 ## boot.dart
 
@@ -18,4 +14,3 @@
 
 - Entry point for each Flavor of the app
 - There is one Flavor per environment (stg, prod)
-- Use `flavors.dart` to define Flavor specific values that are not secret (baseURL, etc).

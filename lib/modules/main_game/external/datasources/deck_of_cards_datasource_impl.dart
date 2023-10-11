@@ -24,7 +24,7 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
   }
 
   @override
-  Future<DeckModel> reshuffleDeck({required String deckId}) async {
+  Future<DeckModel> shuffleDeck({required String deckId}) async {
     final resp = await apiClient.get('$deckPath/$deckId/shuffle');
     return DeckModel.fromJson(resp.data);
   }
@@ -40,17 +40,17 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
   @override
   Future<bool> addCardsToPile({
     required String deckId,
-    required String pileName,
+    required String pileId,
     required List<String> cardCodes,
   }) async {
-    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileName/add?cards=${cardCodes.join(',')}');
+    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileId/add?cards=${cardCodes.join(',')}');
     return resp.data['success'];
   }
 
   @override
-  Future<List<CardModel>> listCardsInPile({required String deckId, required String pileName}) async {
-    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileName/list');
-    final jsonList = resp.data['piles'][pileName]['cards'] as List;
+  Future<List<CardModel>> listCardsInPile({required String deckId, required String pileId}) async {
+    final resp = await apiClient.get('$deckPath/$deckId/pile/$pileId/list');
+    final jsonList = resp.data['piles'][pileId]['cards'] as List;
 
     return jsonList.map((e) => CardModel.fromJson(e as Map<String, dynamic>)).toList();
   }

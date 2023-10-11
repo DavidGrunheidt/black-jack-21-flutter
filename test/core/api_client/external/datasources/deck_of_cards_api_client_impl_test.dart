@@ -1,5 +1,5 @@
 import 'package:black_jack_21_flutter/core/api_client/external/datasources/deck_of_cards_api_client_impl.dart';
-import 'package:black_jack_21_flutter/core/flavors/flavors.dart';
+import 'package:black_jack_21_flutter/flavors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

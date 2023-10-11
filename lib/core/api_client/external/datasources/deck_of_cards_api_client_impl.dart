@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_performance_dio/firebase_performance_dio.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../flavors/flavors.dart';
+import '../../../../flavors.dart';
 import '../../../utils/app_constants.dart';
 import '../../infra/api_client.dart';
 import 'api_client_impl.dart';

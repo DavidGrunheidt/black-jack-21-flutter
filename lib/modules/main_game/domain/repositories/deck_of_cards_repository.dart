@@ -6,13 +6,13 @@ import '../../infra/models/deck_model.dart';
 
 abstract class DeckOfCardsRepository {
   Future<Either<Failure, DeckModel>> getNewDeck();
-  Future<Either<Failure, DeckModel>> reshuffleDeck({required String deckId});
+  Future<Either<Failure, DeckModel>> shuffleDeck({required String deckId});
   Future<Either<Failure, CardModel>> drawCard({required String deckId});
   Future<Either<Failure, bool>> addCardToPile({
     required String deckId,
-    required String pileName,
+    required String pileId,
     required String cardCode,
   });
 
-  Future<Either<Failure, List<CardModel>>> listCardsInPile({required String deckId, required String pileName});
+  Future<Either<Failure, List<CardModel>>> listCardsInPile({required String deckId, required String pileId});
 }

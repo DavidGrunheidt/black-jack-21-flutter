@@ -25,12 +25,12 @@ class DeckOfCardsRepositoryImpl implements DeckOfCardsRepository {
   }
 
   @override
-  Future<Either<Failure, DeckModel>> reshuffleDeck({required String deckId}) async {
+  Future<Either<Failure, DeckModel>> shuffleDeck({required String deckId}) async {
     try {
-      final shuffledDeck = await deckOfCardsDatasource.reshuffleDeck(deckId: deckId);
+      final shuffledDeck = await deckOfCardsDatasource.shuffleDeck(deckId: deckId);
       return Right(shuffledDeck);
     } catch (error, stack) {
-      return Left(ReshuffleDeckError(error: error, stack: stack));
+      return Left(ShuffleDeckError(error: error, stack: stack));
     }
   }
 
@@ -47,13 +47,13 @@ class DeckOfCardsRepositoryImpl implements DeckOfCardsRepository {
   @override
   Future<Either<Failure, bool>> addCardToPile({
     required String deckId,
-    required String pileName,
+    required String pileId,
     required String cardCode,
   }) async {
     try {
       final success = await deckOfCardsDatasource.addCardsToPile(
         deckId: deckId,
-        pileName: pileName,
+        pileId: pileId,
         cardCodes: [cardCode],
       );
 
@@ -66,10 +66,10 @@ class DeckOfCardsRepositoryImpl implements DeckOfCardsRepository {
   @override
   Future<Either<Failure, List<CardModel>>> listCardsInPile({
     required String deckId,
-    required String pileName,
+    required String pileId,
   }) async {
     try {
-      final cards = await deckOfCardsDatasource.listCardsInPile(deckId: deckId, pileName: pileName);
+      final cards = await deckOfCardsDatasource.listCardsInPile(deckId: deckId, pileId: pileId);
       return Right(cards);
     } catch (error, stack) {
       return Left(ListCardsInPileError(error: error, stack: stack));
