@@ -40,8 +40,8 @@ void main() {
       expect(drawnCards.length, 2);
     });
 
-    test('4 - addToPile adds two drawn cards to pile', () async {
-      final success = await datasource.addToPile(
+    test('4 - addCardsToPile adds two drawn cards to pile', () async {
+      final success = await datasource.addCardsToPile(
         deckId: deckModel.deckId,
         pileName: pileName,
         cardCodes: drawnCards.map((e) => e.code).toList(),
@@ -50,22 +50,12 @@ void main() {
       expect(success, true);
     });
 
-    test('5 - addToPile adds two drawn cards to pile', () async {
-      final success = await datasource.addToPile(
-        deckId: deckModel.deckId,
-        pileName: pileName,
-        cardCodes: drawnCards.map((e) => e.code).toList(),
-      );
-
-      expect(success, true);
-    });
-
-    test('6 - listPile lists the two previously added cards inside the pile', () async {
-      final pileCards = await datasource.listPile(deckId: deckModel.deckId, pileName: pileName);
+    test('5 - listCardsInPile lists the two previously added cards inside the pile', () async {
+      final pileCards = await datasource.listCardsInPile(deckId: deckModel.deckId, pileName: pileName);
       expect(pileCards, drawnCards);
     });
 
-    test('7 - reshuffleDeck returns all cards to deck', () async {
+    test('6 - reshuffleDeck returns all cards to deck', () async {
       deckModel = await datasource.reshuffleDeck(deckId: deckModel.deckId);
 
       expect(deckModel.success, true);
@@ -73,9 +63,9 @@ void main() {
       expect(deckModel.shuffled, true);
     });
 
-    test('8 - listPile throws NoSuchMethodError since no pile was created after shuffling', () {
+    test('7 - listCardsInPile throws NoSuchMethodError since no pile was created after shuffling', () {
       return expectLater(
-        datasource.listPile(deckId: deckModel.deckId, pileName: pileName),
+        datasource.listCardsInPile(deckId: deckModel.deckId, pileName: pileName),
         throwsA(isA<NoSuchMethodError>()),
       );
     });

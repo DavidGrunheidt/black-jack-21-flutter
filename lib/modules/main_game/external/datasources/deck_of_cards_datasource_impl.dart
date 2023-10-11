@@ -38,7 +38,7 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
   }
 
   @override
-  Future<bool> addToPile({
+  Future<bool> addCardsToPile({
     required String deckId,
     required String pileName,
     required List<String> cardCodes,
@@ -48,7 +48,7 @@ class DeckOfCardsDatasourceImpl implements DeckOfCardsDatasource {
   }
 
   @override
-  Future<List<CardModel>> listPile({required String deckId, required String pileName}) async {
+  Future<List<CardModel>> listCardsInPile({required String deckId, required String pileName}) async {
     final resp = await apiClient.get('$deckPath/$deckId/pile/$pileName/list');
     final jsonList = resp.data['piles'][pileName]['cards'] as List;
 
