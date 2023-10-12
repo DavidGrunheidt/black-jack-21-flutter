@@ -47,5 +47,7 @@
 		<false/>
 		<key>UILaunchStoryboardName</key>
 		<string>$(LAUNCH_SCREEN_STORYBOARD)</string>
+		<key>NSUserTrackingUsageDescription</key>
+        <string>This app uses tracking data to improve app stability and performance</string>
 	</dict>
 </plist>

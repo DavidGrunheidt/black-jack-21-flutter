@@ -6,8 +6,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../my_app.dart';
-import 'firebase_options/firebase_options.dart';
+import 'core/dependencies/dependency_injector.dart';
+import 'core/firebase_options/firebase_options.dart';
+import 'modules/blackjack21_app.dart';
 
 Future<void> boot() async {
   return runZonedGuarded(() async {
@@ -29,7 +30,8 @@ Future<void> boot() async {
       }).sendPort);
     }
 
-    runApp(const MyApp());
+    configureDependencies();
+    runApp(Blackjack21App());
   }, (error, stack) async {
     if (kDebugMode) debugPrint('Unhandled Error: $error StackTrace: $stack');
     if (kIsWeb) return;

@@ -1,5 +1,5 @@
-import 'core/boot.dart';
-import 'core/flavors/flavors.dart';
+import 'boot.dart';
+import 'flavors.dart';
 
 Future<void> main() async {
   appFlavor = Flavor.STG;

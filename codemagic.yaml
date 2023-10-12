@@ -1,0 +1,175 @@
+definitions:
+  scripts:
+    - &firebase-app-distribution-upload
+      name: Firebase app distribution upload
+      script: |
+        #!/usr/bin/env zsh
+
+        echo 'Installing Firebase tools'
+        curl -sL https://firebase.tools | bash  
+        
+        firebase logout || true
+        echo ${FIREBASE_SA_KEY} | base64 -d > ${GOOGLE_APPLICATION_CREDENTIALS}
+
+        apkPath=$(find build -name "*.apk" | head -1)        
+        aabPath=$(find build -name "*.aab" | head -1)
+
+        if [[ -z ${apkPath} ]]
+        then
+            echo "No apk found, skip publishing apk to Firebase App Distribution"
+        else
+            echo "Publishing $apkPath to Firebase app distribution"
+            firebase appdistribution:distribute "${apkPath}" --app ${FIREBASE_ANDROID_APP_ID} --groups "${FIREBASE_GROUPS}"
+        fi
+        
+        if [[ -z ${aabPath} ]]
+        then
+            echo "No aab found, skip publishing aab to Firebase App Distribution"
+        else
+            echo "Publishing $aabPath to Firebase app distribution"
+            firebase appdistribution:distribute "${aabPath}" --app ${FIREBASE_ANDROID_APP_ID} --groups "${FIREBASE_GROUPS}"
+        fi
+
+    - &setup-android-keystore
+      name: Setup Android KeyStore
+      script: |
+        # set up key.properties
+        echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
+        cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
+        storePassword=$FCI_KEYSTORE_PASSWORD
+        keyPassword=$FCI_KEY_PASSWORD
+        keyAlias=$FCI_KEY_ALIAS
+        storeFile=$FCI_KEYSTORE_PATH
+        EOF
+
+    - &firebase-hosting-upload-pwa
+      name: Build and push docker PWA image
+      script: |
+        #!/usr/bin/env zsh
+
+        echo 'Installing Firebase tools'
+        curl -sL https://firebase.tools | bash  
+        
+        firebase logout || true
+        echo ${FIREBASE_SA_KEY} | base64 -d > ${GOOGLE_APPLICATION_CREDENTIALS}
+        
+        firebase use ${FIREBASE_PROJECT_ID}
+        firebase deploy --only hosting
+workflows:
+  stg-build:
+    name: STG Build
+    max_build_duration: 15
+    environment:
+      groups:
+        - shared
+        - stg
+      flutter: default
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: develop
+          include: true
+          source: true
+      cancel_previous_builds: true
+    scripts:
+      - *setup-android-keystore
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - cd $FLUTTER_ROOT/; git checkout $FLUTTER_FIXED_VERSION
+      - flutter pub get
+      - flutter pub run build_runner build --delete-conflicting-outputs
+      - flutter analyze
+      - flutter test -r expanded
+      - flutter build apk --release --flavor stg -t lib/main_stg.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
+      - flutter build web --release -t lib/main_stg.dart
+      - *firebase-app-distribution-upload
+      - *firebase-hosting-upload-pwa
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - /tmp/xcodebuild_logs/*.log
+      - '*.snap'
+      - flutter_drive.log
+      - debug-info-android.zip
+  prod-release:
+    name: Prod Build and release tag
+    max_build_duration: 15
+    environment:
+      groups:
+        - shared
+        - prod
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    cache:
+      cache_paths:
+        - $HOME/Library/Caches/CocoaPods
+        - $HOME/.gradle/caches
+        - $FLUTTER_ROOT/.pub-cache
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+      cancel_previous_builds: true
+    scripts:
+      - *setup-android-keystore
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - cd $FLUTTER_ROOT/; git checkout $FLUTTER_FIXED_VERSION
+      - flutter pub get
+      - flutter pub run build_runner build --delete-conflicting-outputs
+      - flutter analyze
+      - flutter test -r expanded
+      - flutter build appbundle --release --flavor prod -t lib/main_prod.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
+      - flutter build web --release -t lib/main_prod.dart
+      - name: Create GitHub Release
+        script: |
+          FLUTTER_APP_VERSION=`grep 'version:' pubspec.yaml | awk '{split($0,a,"version: "); split(a[2],b,"+"); print b[1]}'`
+          FLUTTER_APP_BUILD_NUMBER=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER))
+          gh release create v${FLUTTER_APP_VERSION}_${FLUTTER_APP_BUILD_NUMBER} --generate-notes --target main build/app/outputs/bundle/prodRelease/app-prod-release.aab build/app/outputs/mapping/prodRelease/mapping.txt debug-info-android.zip
+      - *firebase-app-distribution-upload
+      - *firebase-hosting-upload-pwa
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - /tmp/xcodebuild_logs/*.log
+      - '*.snap'
+      - flutter_drive.log
+      - debug-info-android.zip
+  pr-checks:
+    name: PR Checks
+    max_build_duration: 10
+    environment:
+      flutter: default
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: develop
+          include: true
+          source: false
+      cancel_previous_builds: true
+    scripts:
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - cd $FLUTTER_ROOT/; git checkout $FLUTTER_FIXED_VERSION
+      - flutter pub get
+      - flutter pub run build_runner build --delete-conflicting-outputs
+      - flutter analyze
+      - flutter test
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - '*.snap'
+      - flutter_drive.log
