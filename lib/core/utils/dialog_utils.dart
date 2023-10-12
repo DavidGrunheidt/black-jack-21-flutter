@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../design_system/theme/custom_colors.dart';
@@ -18,7 +19,7 @@ Future<bool?> showAppDialog({
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
 }) async {
-  if (Platform.isIOS) {
+  if (!kIsWeb && Platform.isIOS) {
     return showCupertinoDialog<bool>(
       context: context,
       barrierDismissible: barrierDismissible,

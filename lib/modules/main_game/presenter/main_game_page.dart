@@ -109,9 +109,11 @@ class _MainGamePageState extends State<MainGamePage> {
 
     if (firstResult.isLeft()) return showErrorDialog(firstResult.leftValue);
     if (await alertIfPlayerWin()) return;
+    Navigator.of(context).pop();
 
     // Draw card to dealer
     await Future.delayed(const Duration(seconds: 2));
+    unawaited(showLoadingDialog(context));
     final secondResult = await _controller.drawnCardToCurrentPlayerHand();
 
     if (secondResult.isLeft()) return showErrorDialog(firstResult.leftValue);

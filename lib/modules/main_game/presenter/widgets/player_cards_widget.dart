@@ -6,6 +6,7 @@ import '../../../../core/design_system/theme/custom_asset.dart';
 import '../../../../core/design_system/theme/custom_colors.dart';
 import '../../../../core/design_system/theme/custom_space.dart';
 import '../../../../core/design_system/theme/custom_text_style.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../infra/models/card_model.dart';
 
 class PlayerCardsWidget extends StatelessWidget {
@@ -24,6 +25,9 @@ class PlayerCardsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final halfScreenWidth = MediaQuery.sizeOf(context).width / 2;
+    const halfCardWidth = cardWidth / 2;
+
     return Column(
       children: [
         Padding(
@@ -35,6 +39,7 @@ class PlayerCardsWidget extends StatelessWidget {
         ),
         if (cards.isNotEmpty)
           Stack(
+            clipBehavior: Clip.none,
             children: [
               Align(
                 alignment: Alignment.topRight,
@@ -44,16 +49,15 @@ class PlayerCardsWidget extends StatelessWidget {
                 ),
               ),
               ...cards.mapIndexed(
-                (index, card) => Align(
-                  alignment: Alignment.center,
-                  widthFactor: 1 + (index / 2.5),
+                (index, card) => Positioned(
+                  left: halfScreenWidth - ((cards.length - index) * 20) - halfCardWidth,
                   child: CachedNetworkImage(
                     imageUrl: card.image,
-                    width: 100,
+                    width: cardWidth,
                     progressIndicatorBuilder: (context, url, _) {
                       return CachedNetworkImage(
                         imageUrl: CustomAsset.backOfCardPngNetworkImg.path,
-                        width: 100,
+                        width: cardWidth,
                       );
                     },
                   ),
