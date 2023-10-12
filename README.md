@@ -18,8 +18,11 @@ Folder structure was higly inspired by [Clean Dart Login with Firebase, MobX and
 
 # Testing on each environment
 
-- Web App staging: https://blackjack21-stg.web.app
-- Web App production: https://blackjack21-prod.web.app
+- Android app staging: https://appdistribution.firebase.dev/i/0c917e55474139df
+- Web app staging: https://blackjack21-stg.web.app
+
+- Android app production: https://appdistribution.firebase.dev/i/6b6c3da51ecf3a97
+- Web app production: https://blackjack21-prod.web.app
 
 ## boot.dart
 
