@@ -86,6 +86,7 @@ workflows:
       - flutter test -r expanded
       - flutter build apk --release --flavor stg -t lib/main_stg.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
       - flutter build web --release -t lib/main_stg.dart
+      - zip -r debug-info-android.zip debug-info-android
       - *firebase-app-distribution-upload
       - *firebase-hosting-upload-pwa
     artifacts:
@@ -130,6 +131,7 @@ workflows:
       - flutter test -r expanded
       - flutter build appbundle --release --flavor prod -t lib/main_prod.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
       - flutter build web --release -t lib/main_prod.dart
+      - zip -r debug-info-android.zip debug-info-android
       - name: Create GitHub Release
         script: |
           FLUTTER_APP_VERSION=`grep 'version:' pubspec.yaml | awk '{split($0,a,"version: "); split(a[2],b,"+"); print b[1]}'`
