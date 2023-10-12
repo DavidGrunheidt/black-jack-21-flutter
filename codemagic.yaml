@@ -136,7 +136,7 @@ workflows:
         script: |
           FLUTTER_APP_VERSION=`grep 'version:' pubspec.yaml | awk '{split($0,a,"version: "); split(a[2],b,"+"); print b[1]}'`
           FLUTTER_APP_BUILD_NUMBER=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER))
-          gh release create v${FLUTTER_APP_VERSION}_${FLUTTER_APP_BUILD_NUMBER} --generate-notes --target main build/app/outputs/flutter-apk/app-stg-release.apk build/app/outputs/mapping/prodRelease/mapping.txt debug-info-android.zip
+          gh release create v${FLUTTER_APP_VERSION}_${FLUTTER_APP_BUILD_NUMBER} --generate-notes --target main build/app/outputs/flutter-apk/app-prod-release.apk build/app/outputs/mapping/prodRelease/mapping.txt debug-info-android.zip
       - *firebase-app-distribution-upload
       - *firebase-hosting-upload-pwa
     artifacts:
