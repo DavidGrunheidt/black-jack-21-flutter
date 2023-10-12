@@ -83,7 +83,7 @@ workflows:
       - flutter packages pub get
       - flutter pub run build_runner build --delete-conflicting-outputs
       - flutter analyze
-      - flutter test
+      - flutter test -r expanded
       - flutter build apk --release --flavor stg -t lib/main_stg.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
       - flutter build web --release -t lib/main_stg.dart
     artifacts:
@@ -129,7 +129,7 @@ workflows:
       - flutter packages pub get
       - flutter pub run build_runner build --delete-conflicting-outputs
       - flutter analyze
-      - flutter test
+      - flutter test -r expanded
       - flutter build appbundle --release --flavor prod -t lib/main_prod.dart --build-number=$(($PROJECT_BUILD_NUMBER + $BASE_BUILD_NUMBER)) --obfuscate --split-debug-info=debug-info-android/
       - flutter build web --release -t lib/main_prod.dart
       - name: Create GitHub Release
