@@ -25,7 +25,7 @@ class PlayerButtons extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IgnorePointer(
             ignoring: !canStartNewGame,
