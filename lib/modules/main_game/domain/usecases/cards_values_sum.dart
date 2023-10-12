@@ -10,6 +10,7 @@ abstract class CardsValuesSum {
 class CardsValuesSumImpl implements CardsValuesSum {
   @override
   int call({required List<CardModel> cards}) {
+    if (cards.isEmpty) return 0;
     final intValues = cards.map((card) {
       if (card.code.startsWith('A')) return 1;
       try {

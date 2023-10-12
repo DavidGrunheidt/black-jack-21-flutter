@@ -29,7 +29,7 @@ void main() {
       Future<Either<Failure, CardModel>> drawCard() => mockDeckOfCardsRepository.drawCard(deckId: deckId);
       when(drawCard()).thenAnswer((_) async => Left(DrawCardError()));
 
-      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, playerId: playerId);
+      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, pileId: playerId);
       resp.fold(
         (left) => expect(left, isA<DrawCardError>()),
         (right) => expect(right, null),
@@ -56,7 +56,7 @@ void main() {
       when(drawCard()).thenAnswer((_) async => Right(cardDrawn));
       when(addCardToPile()).thenAnswer((_) async => Left(AddCardToPileError()));
 
-      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, playerId: playerId);
+      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, pileId: playerId);
       resp.fold(
         (left) => expect(left, isA<AddCardToPileError>()),
         (right) => expect(right, null),
@@ -89,7 +89,7 @@ void main() {
       when(addCardToPile()).thenAnswer((_) async => const Right(true));
       when(listCardsInPile()).thenAnswer((_) async => Left(ListCardsInPileError()));
 
-      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, playerId: playerId);
+      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, pileId: playerId);
       resp.fold(
         (left) => expect(left, isA<ListCardsInPileError>()),
         (right) => expect(right, null),
@@ -125,7 +125,7 @@ void main() {
       when(addCardToPile()).thenAnswer((_) async => const Right(true));
       when(listCardsInPile()).thenAnswer((_) async => Right(pileCards));
 
-      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, playerId: playerId);
+      final resp = await DrawCardToPlayerHandImpl(mockDeckOfCardsRepository).call(deckId: deckId, pileId: playerId);
       resp.fold(
         (left) => expect(left, null),
         (right) => expect(right, pileCards),
