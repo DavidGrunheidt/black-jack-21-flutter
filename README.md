@@ -24,6 +24,13 @@ Folder structure was higly inspired by [Clean Dart Login with Firebase, MobX and
 - Android app production: https://appdistribution.firebase.dev/i/6b6c3da51ecf3a97
 - Web app production: https://blackjack21-prod.web.app
 
+# Run the app
+For running the app app make sure to first run
+```
+make clean
+make gen-code
+```
+
 ## boot.dart
 
 - Initialization and startup logic should be done here.
