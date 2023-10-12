@@ -7,7 +7,7 @@ import '../../infra/models/card_model.dart';
 import '../repositories/deck_of_cards_repository.dart';
 
 abstract class DrawCardToPlayerHand {
-  Future<Either<Failure, List<CardModel>>> call({required String deckId, required String playerId});
+  Future<Either<Failure, List<CardModel>>> call({required String deckId, required String pileId});
 }
 
 @Injectable(as: DrawCardToPlayerHand)
@@ -17,18 +17,18 @@ class DrawCardToPlayerHandImpl implements DrawCardToPlayerHand {
   const DrawCardToPlayerHandImpl(this.deckOfCardsRepository);
 
   @override
-  Future<Either<Failure, List<CardModel>>> call({required String deckId, required String playerId}) async {
+  Future<Either<Failure, List<CardModel>>> call({required String deckId, required String pileId}) async {
     final drawnResult = await deckOfCardsRepository.drawCard(deckId: deckId);
     if (drawnResult.isLeft()) return Left(drawnResult.leftValue);
 
     final drawnCard = drawnResult.rightValue;
     final addToPileResult = await deckOfCardsRepository.addCardToPile(
       deckId: deckId,
-      pileId: playerId,
+      pileId: pileId,
       cardCode: drawnCard.code,
     );
 
     if (addToPileResult.isLeft()) return Left(addToPileResult.leftValue);
-    return deckOfCardsRepository.listCardsInPile(deckId: deckId, pileId: playerId);
+    return deckOfCardsRepository.listCardsInPile(deckId: deckId, pileId: pileId);
   }
 }

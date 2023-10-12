@@ -7,6 +7,10 @@ void main() {
   return group('CardsValuesSum', () {
     const images = CardImagesModel(svg: '', png: '');
 
+    test('cards sums 0', () {
+      expect(CardsValuesSumImpl().call(cards: <CardModel>[]), 0);
+    });
+
     test('cards sums 7', () {
       final cards = [
         const CardModel(code: '', image: '', images: images, value: '2', suit: ''),

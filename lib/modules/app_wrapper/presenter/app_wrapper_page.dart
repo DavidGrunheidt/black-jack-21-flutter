@@ -18,13 +18,13 @@ class AppWrapperPage extends StatefulWidget {
 }
 
 class _AppWrapperPageState extends State<AppWrapperPage> {
-  late final controller = widget.controller ?? getIt<AppWrapperController>();
+  late final _controller = widget.controller ?? getIt<AppWrapperController>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 2), controller.trackingPermissionRequestUseCase);
+      Future.delayed(const Duration(seconds: 2), _controller.trackingPermissionRequestUseCase);
     });
   }
 
